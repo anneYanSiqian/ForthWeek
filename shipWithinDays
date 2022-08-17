@@ -1,0 +1,34 @@
+/**
+ * @param {number[]} weights
+ * @param {number} days
+ * @return {number}
+ */
+var shipWithinDays = function(weights, days) {
+    let left = 0;
+    let right = 0;
+    for (let w of weights) {
+        right += w;
+        left = Math.max(left, w);
+    }
+    while (left < right) {
+        const mid = Math.floor((left + right) / 2);
+        if (valid(weights, days, mid)) right = mid;
+        else left = mid + 1;
+    }
+    return right;
+};
+
+function valid(weights, days, target) {
+    let pre = 0;
+    let curr_days = 1;
+    for (let w of weights) {
+        if (w > target) return false;
+        if (pre + w <= target) pre += w;
+        else {
+            pre = w;
+            curr_days++;
+        }
+        if (curr_days > days) return false;
+    }
+    return curr_days <= days;
+}
